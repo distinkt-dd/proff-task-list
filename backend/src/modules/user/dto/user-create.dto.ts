@@ -7,7 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class RegistrationUserDto {
+export class CreateUserDto {
   @ApiProperty()
   @IsString({ message: 'Имя должно быть строкой' })
   @MinLength(2, { message: 'Минимальная длина имени 2 символа!' })
