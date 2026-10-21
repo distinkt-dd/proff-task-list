@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/jwt-guard.js';
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor.js';
@@ -26,6 +27,10 @@ export class AuthController {
   ) {}
 
   @Post('/register')
+  @ApiResponse({
+    status: 201,
+    description: 'Статус присваивается при успешной регистрации!',
+  })
   async registration(
     @Body() dto: CreateUserDto,
     @Res({ passthrough: true }) res: Response,
@@ -42,10 +47,7 @@ export class AuthController {
   }
 
   @Get('/user')
-  async getUser(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async getUser(@Req() req: Request) {
     return await this.tokenService.getUser(req);
   }
 

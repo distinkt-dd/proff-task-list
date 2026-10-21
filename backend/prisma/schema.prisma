@@ -21,9 +21,10 @@ model User {
 model Task {
   id String @id @default(uuid())
 
-  content String
+  title String
+  description String?
 
-  status StatusEnum
+  status StatusEnum @default(INCOMPLETE)
 
   user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String?  @map("user_id")
@@ -34,7 +35,6 @@ model Task {
 }
 
 enum StatusEnum {
-  ALL
   COMPLETE
   INCOMPLETE
 }

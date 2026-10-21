@@ -5,6 +5,7 @@ import { AppService } from './app.service.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { TokenModule } from './modules/token/token.module.js';
+import { TaskModule } from './modules/task/task.module.js';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TokenModule } from './modules/token/token.module.js';
     }),
     AuthModule,
     TokenModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],

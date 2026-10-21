@@ -36,7 +36,6 @@ export class TokenService {
   private setCookie(res: Response, value: string, exp: Date) {
     res.cookie('refreshToken', value, {
       httpOnly: true,
-      domain: this.COOKIE_DOMAIN,
       expires: exp,
       secure: false,
       sameSite: 'lax',
@@ -77,7 +76,7 @@ export class TokenService {
     res: Response,
   ): Promise<Omit<TTokens, 'refreshToken'> | undefined> {
     try {
-      const refreshToken = req.cookies['refreshToken'];
+      const refreshToken = req.cookies?.['refreshToken'];
       if (!refreshToken) {
         throw new UnauthorizedException(ErrorsConstants.UNAUTHORIZED);
       }
@@ -102,7 +101,7 @@ export class TokenService {
         this.setCookie(
           res,
           refreshToken,
-          new Date(Date.now() + 1 * 3 * 60 * 60 * 1000),
+          new Date(Date.now() + 24 * 60 * 60 * 1000),
         );
 
         return {
