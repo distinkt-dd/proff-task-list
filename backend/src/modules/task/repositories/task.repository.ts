@@ -9,6 +9,7 @@ import {
   TaskResponse,
   taskSelect,
 } from '../types/index.js';
+import { UpdateTaskDto } from './../dto/update-task.dto.js';
 
 @Injectable()
 export class TaskRepository {
@@ -85,6 +86,32 @@ export class TaskRepository {
       },
       data: {
         deletedAt: new Date(),
+      },
+    });
+  }
+
+  async update(
+    dto: UpdateTaskDto,
+    taskId: string,
+    userId: string,
+  ): Promise<TaskResponse> {
+    await this.findOneOrThrow(taskId, userId);
+    return await this.prismaService.task.update({
+      where: {
+        id: taskId,
+      },
+      select: taskSelect,
+      data: {
+        title: dto.title,
+        description: dto.description,
+        priority: dto.priority,
+        status: dto.status,
+        dueDate:
+          dto.dueDate === undefined
+            ? undefined
+            : dto.dueDate === null
+              ? null
+              : new Date(dto.dueDate),
       },
     });
   }

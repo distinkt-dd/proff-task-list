@@ -74,7 +74,6 @@ export class TokenService {
       id: user.id,
       name: user.name,
       email: user.email,
-      tasks: user.tasks,
       accessToken: accessToken,
     };
   }

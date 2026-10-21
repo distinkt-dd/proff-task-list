@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PaginationDto } from '../../common/dtos/pagination.dto.js';
 import { CreateTaskDto } from './dto/create-task.dto.js';
+import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { TaskRepository } from './repositories/task.repository.js';
 import { PaginatedTaskResponse, TaskResponse } from './types/index.js';
 
@@ -25,5 +26,13 @@ export class TaskService {
 
   softDelete(taskId: string, userId: string): Promise<void> {
     return this.taskRepository.softDelete(taskId, userId);
+  }
+
+  update(
+    dto: UpdateTaskDto,
+    taskId: string,
+    userId: string,
+  ): Promise<TaskResponse> {
+    return this.taskRepository.update(dto, taskId, userId);
   }
 }

@@ -1,5 +1,3 @@
-import { Task } from '@prisma/client';
-
 export type TUserForRegister = {
   name: string;
   email: string;
@@ -11,7 +9,6 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
-  tasks: Task[];
 };
 
 export type TPublicUser = Omit<TUser, 'password'>;

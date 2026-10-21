@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -25,6 +26,7 @@ import { PaginationDto } from '../../common/dtos/pagination.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-guard.js';
 import type { JwtPayload } from '../../common/strategy/types.js';
 import { CreateTaskDto } from './dto/create-task.dto.js';
+import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { TaskService } from './task.service.js';
 import { PaginatedTaskResponse, TaskResponse } from './types/index.js';
 import {
@@ -98,5 +100,20 @@ export class TaskController {
     @CurrentUser() user: JwtPayload,
   ): Promise<void> {
     return this.taskService.softDelete(id, user.id);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Обновить задачу (частично)' })
+  @ApiOkResponse({ description: 'Обновлённая задача', type: TaskResponseClass })
+  @ApiNotFoundResponse({
+    description: 'Задача не найдена или принадлежит другому пользователю',
+  })
+  @ApiUnauthorizedResponse({ description: 'Невалидный или отсутствующий JWT' })
+  updateTask(
+    @Param('id') id: string,
+    @Body() dto: UpdateTaskDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.taskService.update(dto, id, user.id);
   }
 }
