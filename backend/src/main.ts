@@ -19,12 +19,13 @@ async function bootstrap() {
     .setTitle('Proffesional task list')
     .setDescription('Професиональный список задач для рабочих целей!')
     .setVersion('1.0')
-    .addTag('Tasks')
+    .addBearerAuth()
+
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api/docs', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3000);
 }

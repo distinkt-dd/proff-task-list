@@ -26,6 +26,7 @@ export class UserRepository {
         ...dataForRegister,
       },
       select: {
+        id: true,
         name: true,
         email: true,
         tasks: true,

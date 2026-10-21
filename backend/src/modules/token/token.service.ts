@@ -23,10 +23,14 @@ export class TokenService {
   }
 
   private sign(
-    payload: { email: string },
+    payload: { email: string; id: string },
     secretKey: string,
     expireKey: string,
   ): string {
+    if (!payload.id || !payload.email) {
+      throw new Error('Invalid JWT payload: id and email are required');
+    }
+
     return this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>(secretKey),
       expiresIn: this.configService.getOrThrow(expireKey),
@@ -42,11 +46,14 @@ export class TokenService {
     });
   }
 
-  async accessAndRefreshTokensGenerate(email: string): Promise<TTokens> {
+  async accessAndRefreshTokensGenerate(
+    email: string,
+    id: string,
+  ): Promise<TTokens> {
     return {
-      accessToken: this.sign({ email }, 'SECRET_JWT', 'EXPIRE_JWT'),
+      accessToken: this.sign({ email, id }, 'SECRET_JWT', 'EXPIRE_JWT'),
       refreshToken: this.sign(
-        { email },
+        { email, id },
         'SECRET_REFRESH_JWT',
         'EXPIRE_REFRESH_JWT',
       ),
@@ -55,7 +62,7 @@ export class TokenService {
 
   async auth(res: Response, user: TPublicUser): Promise<UserResponse> {
     const { accessToken, refreshToken } =
-      await this.accessAndRefreshTokensGenerate(user.email);
+      await this.accessAndRefreshTokensGenerate(user.email, user.id);
 
     this.setCookie(
       res,
@@ -64,6 +71,7 @@ export class TokenService {
     );
 
     return {
+      id: user.id,
       name: user.name,
       email: user.email,
       tasks: user.tasks,
@@ -96,7 +104,10 @@ export class TokenService {
         const { password, ...otherUser } = user;
 
         const { accessToken, refreshToken } =
-          await this.accessAndRefreshTokensGenerate(otherUser.email);
+          await this.accessAndRefreshTokensGenerate(
+            otherUser.email,
+            otherUser.id,
+          );
 
         this.setCookie(
           res,
